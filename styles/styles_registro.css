@@ -5,7 +5,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #001f3f; /* Azul marino */
+    background-color: #FFFAF0; /* Azul marino */
     color: #fff;
     font-family: Arial, sans-serif;
 }
@@ -16,7 +16,7 @@ body {
 
 .login-container, .register-container {
     background-color: #000; /* Negro */
-    padding: 20px;
+    padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 300px;
@@ -48,7 +48,7 @@ button {
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff; /* Azul */
+    background-color: #00CED1; /* Azul */
     color: #fff;
     font-size: 16px;
     cursor: pointer;
@@ -56,7 +56,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #00CED1;
 }
 
 .extra-options {
@@ -65,7 +65,7 @@ button:hover {
 
 .extra-options a {
     display: block;
-    color: #007bff;
+    color: #00CED1;
     text-decoration: none;
     margin: 5px 0;
     transition: color 0.3s;
@@ -92,7 +92,7 @@ button:hover {
 .modal-content {
     background-color: #000;
     margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
+    padding: 40px;
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
     max-width: 400px;
