@@ -5,15 +5,15 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #001f3f; /* Azul marino */
+    background-color: #FFFAF0; /* Azul marino */
     color: #fff;
     font-family: Arial, sans-serif;
 }
-
+/* color del backgroun de los texbox del login */
 .login-container {
     background-color: #000; /* Negro */
-    padding: 100px;
-    border-radius: 10px;
+    padding: 40px;
+    border-radius: 30px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 300px;
     text-align: center;
@@ -45,7 +45,7 @@ button {
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff; /* Azul */
+    background-color: #00CED1; /* Azul */
     color: #fff;
     font-size: 16px;
     cursor: pointer;
@@ -53,13 +53,13 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color:  #00CED1;
 }
 
 .extra-options {
     margin-top: 10px;
 }
-
+/* color de los label */
 .extra-options a {
     display: block;
     color: #007bff;
@@ -69,5 +69,5 @@ button:hover {
 }
 
 .extra-options a:hover {
-    color: #0056b3;
+    color:  #00CED1;
 }
