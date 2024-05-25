@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link rel="stylesheet" href="/styles/styles_registro.css">
+</head>
+<body>
+    <div class="container">
+        <div class="register-container" id="register-container">
+            <form class="register-form">
+                <h2>Registrarse</h2>
+                <div class="input-group">
+                    <label for="firstname">Nombre</label>
+                    <input type="text" id="firstname" name="firstname" required>
+                </div>
+                <div class="input-group">
+                    <label for="lastname">Apellido</label>
+                    <input type="text" id="lastname" name="lastname" required>
+                </div>
+                <div class="input-group">
+                    <label for="address">Dirección</label>
+                    <input type="text" id="address" name="address" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg-password">Clave</label>
+                    <input type="password" id="reg-password" name="password" required>
+                </div>
+                <button type="submit">Registrarse</button>
+                <div class="extra-options">
+                    <a href="/index.html">Iniciar Sesión</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="/JScript/jscript_registro.js"></script>
+</body>
+</html>
