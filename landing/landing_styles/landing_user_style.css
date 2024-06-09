@@ -1,13 +1,11 @@
 
-
 body {
     background-image: url(/landing/imagenes/lovepik-clean-city-picture_500785176.jpg);
     background-position: center;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 100%;
    
 }
-
 
 .navbar-nav {
     margin-right: 40px;
@@ -51,10 +49,6 @@ section {
     transition: all 400ms ease;
 
 }
-
-
-
-
 
 
 /*Footer*/
