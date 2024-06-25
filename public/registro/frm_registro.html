@@ -43,6 +43,9 @@
           <input type="password" id="clave" name="clave" required />
         </div>
         <button type="submit">Registrarse</button>
+        <div class="extra-options">
+          <a href="../login/frm_login.html" id="Iniciar Sesión-link">Iniciar Sesión</a>
+      </div>
       </form>
     </div>
 
@@ -149,6 +152,7 @@
           } catch (error) {
             console.error("Error al enviar el formulario:", error);
             showModal("Registro exitoso.");
+            
           }
         });
     </script>

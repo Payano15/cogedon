@@ -52,21 +52,37 @@ app.post('/register', async (req, res) => {
 
         // Insertar usuario en la base de datos
         const insertQuery = `
-            INSERT INTO registro_usuarios (nombre, apellido, direccion, email, clave)
+            INSERT INTO resgitro_usuarios (nombre, apellido, direccion, email, clave)
+            OUTPUT INSERTED.id
             VALUES (@nombre, @apellido, @direccion, @email, @clave);
         `;
 
-        const result = await sql.query(insertQuery, {
-            nombre: sql.VarChar(255),
-            apellido: sql.VarChar(255),
-            direccion: sql.VarChar(255),
-            email: sql.VarChar(255),
-            clave: sql.VarChar(255)
-        });
+        const request = new sql.Request();
+        request.input('nombre', sql.VarChar(255), nombre);
+        request.input('apellido', sql.VarChar(255), apellido);
+        request.input('direccion', sql.VarChar(255), direccion);
+        request.input('email', sql.VarChar(255), email);
+        request.input('clave', sql.VarChar(255), clave);
 
-        console.log('Usuario registrado exitosamente.');
+        const insertResult = await request.query(insertQuery);
 
-        res.status(201).json({ message: 'Registro exitoso.' });
+        // if (insertResult.recordset.length === 0) {
+        //     return res.status(500).json({ message: 'Error al registrar usuario.' });
+        // }
+
+        const lastInsertedId = insertResult.recordset[0].id;
+
+        // Ejecutar el procedimiento almacenado con el ID recién insertado
+        const procedureRequest = new sql.Request();
+        procedureRequest.input('idusuarios', sql.Int, lastInsertedId);
+
+        const procedureResult = await procedureRequest.execute('usp_create_usuarios');
+        console.log(procedureResult);
+
+        res.status(201).json({ message: 'Usuario registrado y procedimiento ejecutado correctamente.' });
+   
+      
+
     } catch (error) {
         console.error('Error al registrar usuario:', error);
         res.status(500).json({ message: 'Error en el registro.', error: error.message });
@@ -76,47 +92,50 @@ app.post('/register', async (req, res) => {
 });
 
 // Inicio de sesión de usuarios
-app.post('/login', async (req, res) => {
-    const { codigo, clave } = req.body;
-
-    console.log('Datos recibidos del formulario de inicio de sesión:', { codigo, clave });
-
-    if (!codigo || !clave) {
-        return res.status(400).json({ message: 'Por favor, ingrese código y clave.' });
-    }
-
-    try {
-        // Conectar a la base de datos
-        await connectToDatabase();
-
-        // Consultar el usuario con el código y clave proporcionados
-        const query = `
-            SELECT codigo, clave
-            FROM usuarios
-            WHERE codigo = '${codigo}'
-            AND clave = '${clave}';
-        `;
-
-        const result = await sql.query(query);
-        
-        if (result.recordset.length === 0) {
-            return res.status(404).json({ message: 'Código o clave incorrectos.' });
+// Inicio de sesión de usuarios
+// Ruta para manejar las solicitudes POST del inicio de sesión
+// Ruta para manejar las solicitudes POST del inicio de sesiónapp.post('/login', async (req, res) => {
+    app.post('/login', async (req, res) => {
+        const { codigo, clave } = req.body;
+    
+        console.log('Datos recibidos del formulario de inicio de sesión:', { codigo, clave });
+    
+        if (!codigo || !clave) {
+            return res.status(400).json({ success: false, message: 'Por favor, ingrese código y clave.' });
         }
-
-        console.log('Usuario encontrado:', result.recordset[0]);
-
-        res.status(200).json({ message: 'Inicio de sesión exitoso.', user: result.recordset[0] });
-    } catch (error) {
-        console.error('Error al iniciar sesión:', error);
-        res.status(500).json({ message: 'Error en el inicio de sesión.', error: error.message });
-    } finally {
-        await sql.close();
-    }
-});
+    
+        try {
+            await connectToDatabase();
+    
+            const query = `
+                SELECT codigo, clave
+                FROM usuarios
+                WHERE codigo = @codigo
+                AND clave = @clave;
+            `;
+    
+            const request = new sql.Request();
+            request.input('codigo', sql.VarChar, codigo);
+            request.input('clave', sql.VarChar, clave);
+    
+            const result = await request.query(query);
+            
+            if (result.recordset.length === 0) {
+                return res.status(404).json({ success: false, message: 'Código o clave incorrectos.' });
+            }
+    
+            console.log('Usuario encontrado:', result.recordset[0]);
+    
+            res.status(200).json({ success: true });
+        } catch (error) {
+            console.error('Error al iniciar sesión:', error.message);
+            res.status(500).json({ success: false, message: 'Error en el inicio de sesión.', error: error.message });
+        } finally {
+            await sql.close();
+        }
+    });
 
 // Iniciar el servidor
 app.listen(PORT, () => {
     console.log(`Servidor iniciado en el puerto ${PORT}`);
 });
-
-
