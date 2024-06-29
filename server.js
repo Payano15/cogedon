@@ -4,7 +4,8 @@ const sql = require('mssql');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const session = require('express-session');
-const path = require('path'); // Asegúrate de importar el módulo 'path'
+const path = require('path');
+const multer = require('multer');
 
 dotenv.config();
 
@@ -20,6 +21,11 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
 }));
+
+// Configuración de multer para la carga de archivos
+const upload = multer({ 
+    dest: 'C:\\JESUS MANUEL ARIAS\\cogedon\\uploads\\' 
+});
 
 const config = {
     user: process.env.DB_USER,
@@ -56,7 +62,7 @@ app.post('/register', async (req, res) => {
         await connectToDatabase();
 
         const insertQuery = `
-            INSERT INTO resgitro_usuarios (nombre, apellido, direccion, email, clave)
+            INSERT INTO registro_usuarios (nombre, apellido, direccion, email, clave)
             OUTPUT INSERTED.id
             VALUES (@nombre, @apellido, @direccion, @email, @clave);
         `;
@@ -134,12 +140,41 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Endpoint para obtener el usuario actual
-app.get('/current-user', (req, res) => {
-    if (req.session.user) {
-        res.json({ user: req.session.user });
-    } else {
-        res.status(401).json({ message: 'No autenticado' });
+// Endpoint para guardar reporte con archivo
+app.post('/guardar-reporte', upload.single('imageUpload'), async (req, res) => {
+    const { idusuarios, longitud, latitud, comentario, fechareporte } = req.body;
+    
+    let imagen = ''; // Inicializamos imagen como vacía
+
+    // Verificar si se subió un archivo
+    if (req.file) {
+        imagen = req.file.path; // Ruta al archivo guardado temporalmente
+    }
+
+    try {
+        await connectToDatabase();
+
+        const insertQuery = `
+            INSERT INTO reporte_usuarios (idusuarios, longitud, latitud, comentario, imagen, fechareporte)
+            VALUES (@idusuarios, @longitud, @latitud, @comentario, @imagen, @fechareporte);
+        `;
+
+        const request = new sql.Request();
+        request.input('idusuarios', sql.Int, idusuarios);
+        request.input('longitud', sql.Decimal(9, 6), longitud);
+        request.input('latitud', sql.Decimal(9, 6), latitud);
+        request.input('comentario', sql.VarChar(255), comentario);
+        request.input('imagen', sql.VarChar(255), imagen); // Guarda la ruta del archivo, puede ser vacía si no se subió ningún archivo
+        request.input('fechareporte', sql.DateTime, fechareporte);
+
+        await request.query(insertQuery);
+
+        res.status(201).json({ message: 'Reporte guardado correctamente.' });
+    } catch (error) {
+        console.error('Error al guardar reporte:', error.message);
+        res.status(500).json({ message: 'Error al guardar reporte.', error: error.message });
+    } finally {
+        await sql.close();
     }
 });
 
@@ -149,6 +184,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Ruta para la página de reporte
 app.get('/reporte', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'reporte.html'));
+});
+
+// Manejo de errores para métodos no permitidos
+app.use((req, res, next) => {
+    res.status(405).send('Method Not Allowed');
 });
 
 // Iniciar el servidor

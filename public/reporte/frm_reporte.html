@@ -16,13 +16,36 @@
             max-width: 1200px; /* Ancho máximo del contenedor principal */
             margin: 0 auto; /* Centrar el contenedor en la página */
         }
+
+        .custom-file-upload {
+            display: inline-block;
+            cursor: pointer;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none; /* Quitar decoración de texto */
+            transition: background-color 0.3s ease; /* Transición de color de fondo */
+            border: none; /* Quitar borde */
+            outline: none; /* Quitar contorno al hacer clic */
+            box-shadow: none; /* Quitar sombra */
+        }
+
+        .custom-file-upload:hover {
+            background-color: #0056b3; /* Cambio de color al pasar el mouse */
+        }
+
+        .custom-file-upload input[type="file"] {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="nav-container"> 
         <nav class="navbar navbar-expand-lg bg-body-tertiary ms-3">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">CogeDon</a>
+                <a class="navbar-brand" href="../landing/landing_user.html">CogeDon</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -37,7 +60,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="../reporte/frm_reporte.html">Reportar</a></li>
-                                <li><a class="dropdown-item" href="#">Mis reportes</a></li>
+                                <li><a class="dropdown-item" href="../reporte/frm_mis_reportes.html">Mis reportes</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -67,25 +90,25 @@
     </div>
     <div class="container">
         <div id="map"></div>
-        <form id="locationForm">
+        <form id="locationForm" action="/guardar-reporte" method="POST" enctype="multipart/form-data">
             <div class="form-group inline">
                 <div>
                     <label for="longitude">Longitud</label>
-                    <input type="text" id="longitude" name="longitude" readonly>
+                    <input type="text" id="longitude" name="longitude" readonly required>
                 </div>
                 <div>
                     <label for="latitude">Latitud</label>
-                    <input type="text" id="latitude" name="latitude" readonly>
+                    <input type="text" id="latitude" name="latitude" readonly required>
                 </div>
             </div>
             <div class="form-group">
                 <label for="comment">Comentario</label>
-                <textarea id="comment" name="comment"></textarea>
+                <textarea id="comment" name="comment" required></textarea>
             </div>
             <div class="form-group">
                 <label class="custom-file-upload">
-                    <input type="file" id="imageUpload" name="imageUpload">
-                    <span>Subir Imagen</span>
+                    <input type="file" id="imageUpload" name="imageUpload" onchange="updateFileName(this)" required>
+                    <span id="fileName">Subir Imagen</span>
                 </label>
             </div>
             <button type="submit">Guardar</button>
@@ -123,6 +146,11 @@
 
             map.on('click', onMapClick);
         });
+
+        function updateFileName(input) {
+            var fileName = input.files[0].name;
+            document.getElementById('fileName').textContent = fileName;
+        }
     </script>
 </body>
 </html>
