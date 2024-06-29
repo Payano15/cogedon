@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte</title>
+    <link rel="stylesheet" href="../styles/style_reportar.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            width: 100%; /* Ajuste para ocupar todo el ancho disponible */
+            height: 50vh; /* Altura original del mapa */
+        }
+
+        .container {
+            max-width: 1200px; /* Ancho máximo del contenedor principal */
+            margin: 0 auto; /* Centrar el contenedor en la página */
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-container"> 
+        <nav class="navbar navbar-expand-lg bg-body-tertiary ms-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">CogeDon</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ms-5">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Nosotros</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Servicios
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="../reporte/frm_reporte.html">Reportar</a></li>
+                                <li><a class="dropdown-item" href="#">Mis reportes</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user"></i> 
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Perfil</a></li>
+                                <li><a class="dropdown-item" href="#">Configuración</a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <ul>
+                                            <li><a class="dropdown-item" href="#">Reportes</a></li>
+                                            <li><a class="dropdown-item" href="#">Usuarios</a></li>
+                                        </ul>
+                                    </ul>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="../login/frm_login.html">Cerrar Sesión</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="container">
+        <div id="map"></div>
+        <form id="locationForm">
+            <div class="form-group inline">
+                <div>
+                    <label for="longitude">Longitud</label>
+                    <input type="text" id="longitude" name="longitude" readonly>
+                </div>
+                <div>
+                    <label for="latitude">Latitud</label>
+                    <input type="text" id="latitude" name="latitude" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="comment">Comentario</label>
+                <textarea id="comment" name="comment"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="custom-file-upload">
+                    <input type="file" id="imageUpload" name="imageUpload">
+                    <span>Subir Imagen</span>
+                </label>
+            </div>
+            <button type="submit">Guardar</button>
+        </form>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var map = L.map('map').setView([18.7357, -70.1627], 8); // Coordenadas de la República Dominicana
+            var marker = null;
+
+            // Use OpenStreetMap as fallback
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            function onMapClick(e) {
+                var latitude = e.latlng.lat;
+                var longitude = e.latlng.lng;
+
+                // Update the form fields
+                document.getElementById('latitude').value = latitude;
+                document.getElementById('longitude').value = longitude;
+
+                // Remove previous marker if it exists
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+
+                // Add new marker to the map
+                marker = L.marker([latitude, longitude]).addTo(map);
+            }
+
+            map.on('click', onMapClick);
+        });
+    </script>
+</body>
+</html>
