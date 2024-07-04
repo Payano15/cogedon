@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link rel="stylesheet" type="text/css" href="/styles2/styles_loggin.css">
+    <link rel="stylesheet" type="text/css" href="../styles/styles_loggin_nue.css">
 </head>
 <body>
     <div class="login-container">
@@ -20,11 +20,28 @@
             </div>
             <button type="submit">Iniciar Sesión</button>
             <div class="extra-options">
-                <a href="#" id="forgot-password">¿Olvidaste tu contraseña?</a>
-                <a href="../registro/frm_registro.html" id="register-link">Registrarse</a>
+                <a href="../olvide_clave/recuperar_clave_new.html" id="forgot-password">¿Olvidaste tu contraseña?</a>
+                <a href="../registro/frm_registro_new.html" id="register-link">Registrarse</a>
             </div>
         </form>
     </div>
+
+        <!-- Modal -->
+        <!-- <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form class="forgot-password-form">
+                    <h2>Recuperar Contraseña</h2>
+                    <div class="input-group">
+                        <label for="email">Correo Electrónico</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+        </div> -->
+
+
 
     <!-- Modal para Mostrar Mensajes -->
     <div id="myModal" class="modal">
@@ -33,7 +50,7 @@
             <p id="modalMessage"></p>
         </div>
     </div>
-
+    <!-- <script src="../JScript/jscrip_recuerar_clave.js"></script> -->
     <!-- Incluir el archivo JavaScript personalizado -->
     <script>
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
