@@ -1,10 +1,11 @@
 
 body {
-    background-image: url(/landing/imagenes/lovepik-clean-city-picture_500785176.jpg);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 100%;
-   
+    background: #FFFFFF;
+
+}
+
+main {
+    
 }
 
 .navbar-nav {
@@ -26,7 +27,32 @@ body {
 /*Estilos de la seccion main*/
 
 section {
-    margin-top: 20px;
+    margin-top: 5px;
+    background-image: url(/landing/imagenes/lovepik-clean-city-picture_500785176.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+
+}
+
+.carousel-inner .carousel-item h5 {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+}
+
+#about {
+    position: relative;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    border-radius: 10px;
+}
+
+#about .container {
+    background: rgba(0, 0, 0, 0.5); /* Background with opacity */
+    padding: 20px;
+    border-radius: 10px;
 }
 
 
