@@ -1,7 +1,7 @@
 
 
 body {
- background: #FFFFFF;
+ 
    
 }
 
@@ -20,6 +20,16 @@ body {
 .navbar-nav .nav-link.btn-custom:hover {
     background-color: #FFFAF0; /* Color de fondo al pasar el mouse */
     color: #00CED1; /* Color de texto al pasar el mouse */
+}
+
+.navbar-brand {
+    background: linear-gradient(40deg, rgb(255, 0, 0), rgb(0, 217, 255));
+    font-family: sans-serif;
+    font-size: 40px;
+    font-weight: 400;
+    text-transform: uppercase;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /*Estilos de la seccion main*/
