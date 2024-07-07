@@ -33,6 +33,19 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
+
+.nav-link {
+    color: black;    
+
+}
+
+.nav-link:hover {
+    color: #00CED1;    
+
+
+}
+
+
 form {
     display: flex;
     flex-direction: column;
