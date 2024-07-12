@@ -64,7 +64,6 @@
 
     <div class="container">
         <div id="map"></div>
-        <button id="getLocationBtn" class="btn btn-primary my-3">Obtener Mi Ubicación</button>
         <form id="reporteForm" enctype="multipart/form-data">
             <div class="form-group inline">
                 <div>
@@ -77,10 +76,6 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="province">Provincia</label>
-                <input type="text" id="province" name="province">
-            </div>
-            <div class="form-group">
                 <label for="comment">Comentario</label>
                 <textarea id="comment" name="comment"></textarea>
             </div>
@@ -90,6 +85,7 @@
             </div>
             <h2>Seleccione grado de basura</h2>
             <div class="radio-group">
+                
                 <label>
                     <input type="radio" name="enubasu" value="1">
                     1
@@ -149,31 +145,6 @@
             }
     
             map.on('click', onMapClick);
-
-            document.getElementById('getLocationBtn').addEventListener('click', function() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                        var latitude = position.coords.latitude;
-                        var longitude = position.coords.longitude;
-                        
-                        document.getElementById('latitude').value = latitude;
-                        document.getElementById('longitude').value = longitude;
-
-                        if (marker) {
-                            map.removeLayer(marker);
-                        }
-
-                        marker = L.marker([latitude, longitude]).addTo(map);
-                        map.setView([latitude, longitude], 15);
-                    }, function(error) {
-                        console.error('Error obteniendo la ubicación: ' + error.message);
-                        showModal('Error obteniendo la ubicación.');
-                    });
-                } else {
-                    console.error('Geolocation no está soportado en este navegador.');
-                    showModal('Geolocation no está soportado en este navegador.');
-                }
-            });
         });
     
         // Función para mostrar el modal con un mensaje
@@ -205,8 +176,7 @@
             document.getElementById('latitude').value = '';
             document.getElementById('comment').value = '';
             document.getElementById('imageUpload').value = ''; // Limpiar el campo de imagen
-            document.getElementById('province').value = ''; // Limpiar el campo de provincia
-            document.querySelector('input[name="enubasu"]:checked').checked = false; // Limpiar selección de radio buttons
+            document.getElementById('radioForm').value = '';
         }
     
         document

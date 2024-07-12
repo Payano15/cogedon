@@ -146,7 +146,7 @@ app.post('/login', async (req, res) => {
 
 // Ruta para manejar la subida de reportes
 app.post('/reporte', upload.single('imageUpload'), async (req, res) => {
-    const { longitude, latitude, comment } = req.body;
+    const { longitude, latitude, comment, enubasu, province } = req.body; // Incluyendo 'province'
 
     try {
         const pool = await connectToDatabase();
@@ -167,18 +167,20 @@ app.post('/reporte', upload.single('imageUpload'), async (req, res) => {
         const idUsuario = lastUserIdResult.recordset[0].idUsuario;
 
         const request = new sql.Request(pool);
-        request.input('idUsuario', sql.Int, idUsuario); 
+        request.input('idUsuario', sql.Int, idUsuario);
         request.input('longitude', sql.VarChar(150), longitude);
         request.input('latitude', sql.VarChar(150), latitude);
         request.input('comment', sql.NVarChar, comment);
         request.input('imagePath', sql.NVarChar, req.file.path);
-        request.input('fecha_reporte', sql.DateTime, new Date()); // Agregar la fecha del reporte
-        request.input('estatus', sql.VarChar(50), 'ACT'); // Agregar el estatus
-        request.input('pais', sql.VarChar(50), 'Republica Dominicana'); // Agregar el estatus
+        request.input('fecha_reporte', sql.DateTime, new Date());
+        request.input('estatus', sql.VarChar(50), 'ACT');
+        request.input('pais', sql.VarChar(50), 'Republica Dominicana');
+        request.input('enubasu', sql.VarChar(10), enubasu);
+        request.input('provincia', sql.VarChar(100), province); // Agregando 'province'
 
         const result = await request.query(`
-            INSERT INTO reporte_usuarios (idusuarios, longitud, latitud, Comment, ImagePath, fecha_reporte, estatus, pais)
-            VALUES (@idUsuario, @latitude, @longitude, @comment, @imagePath, @fecha_reporte, @estatus, @pais)
+            INSERT INTO reporte_usuarios (idusuarios, longitud, latitud, Comment, ImagePath, fecha_reporte, estatus, pais, enubasu, provincia)
+            VALUES (@idUsuario, @longitude,  @latitude, @comment, @imagePath, @fecha_reporte, @estatus, @pais, @enubasu, @provincia)
         `);
 
         res.json({ message: 'Reporte guardado con éxito' });
@@ -188,17 +190,34 @@ app.post('/reporte', upload.single('imageUpload'), async (req, res) => {
     }
 });
 
-
 // Ruta para filtrar reportes
 app.post('/filtrados', async (req, res) => {
     const { fechaDesde, fechaHasta } = req.body;
     console.log('Fechas recibidas:', fechaDesde, fechaHasta); // Debugging
 
     try {
-        await sql.connect(dbConfig);
-        const result = await sql.query`
-            SELECT * FROM reporte_usuarios WHERE fecha_reporte BETWEEN ${fechaDesde} AND ${fechaHasta}
+        const pool = await connectToDatabase();
+
+        const query = `
+            SELECT 
+                rp.id AS numeroReporte, 
+                ru.nombre + ' ' + ru.apellido AS nombreApellido,
+                rp.estatus,
+                ru.direccion,
+                rp.fecha_reporte AS fechaReporte,
+                rp.Comment AS comentario
+            FROM reporte_usuarios rp
+            JOIN resgitro_usuarios ru ON rp.idusuarios = ru.id
+            WHERE rp.fecha_reporte BETWEEN @fechaDesde AND @fechaHasta
         `;
+        
+        console.log('Consulta ejecutada:', query); // Debugging
+
+        const request = new sql.Request(pool);
+        request.input('fechaDesde', sql.Date, fechaDesde);
+        request.input('fechaHasta', sql.Date, fechaHasta);
+
+        const result = await request.query(query);
         console.log('Reportes obtenidos:', result.recordset); // Debugging
         res.json(result.recordset);
     } catch (error) {
@@ -206,7 +225,6 @@ app.post('/filtrados', async (req, res) => {
         res.status(500).send('Error al obtener los reportes');
     }
 });
-
 
 // Iniciar el servidor
 app.listen(PORT, () => {
